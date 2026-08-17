@@ -1,0 +1,158 @@
+import { debounce, Plugin, TFile, } from "obsidian";
+import { EditorView, ViewUpdate } from "@codemirror/view";
+import SlashSnippetSettingTab from "./SlashSnippetSettingTab";
+import SlashSuggestions from "./SlashSuggestions";
+import BibleVerses from "./BibleVerses";
+import BibleSuggestions from "./BibleVerseSuggestions";
+
+interface SlashSnippetSettings {
+	slashTrigger: string;
+	fuzzySearch: boolean;
+	highlight: boolean;
+	showPath: boolean;
+	showFileContent: boolean;
+	snippetPath: string;
+	ignoreProperties: boolean;
+	templaterSupport: boolean;
+	textSelectionString: string;
+	cursorPositionString: string;
+	maxSelectedTextLength: number;
+	showSelectedText: boolean;
+}
+
+
+const DEFAULT_SETTINGS: SlashSnippetSettings = {
+	bibleTrigger: "/",
+	slashTrigger: "/",
+	fuzzySearch: true,
+	highlight: true,
+	showPath: false,
+	showFileContent: false,
+	snippetPath: "Snippets",
+	ignoreProperties: true,
+	templaterSupport: true,
+	textSelectionString: "%%textSelection%%",
+	cursorPositionString: "%%cursor%%",
+	maxSelectedTextLength: 50,
+	showSelectedText: false
+};
+
+export interface SuggestionObject {
+	filePath: string;
+	positions: number[];
+	score: number;
+}
+
+export interface SuggestionVerse {
+	verseKey: string;
+	verseText: string | undefined;
+}
+
+export default class SlashSnippetPlugin extends Plugin {
+	settings!: SlashSnippetSettings;
+	selectedText = "";
+	snippetFiles: TFile[] = [];
+	bibleVerses!: BibleVerses;
+
+	async onload() {
+		await this.loadSettings();
+		this.registerEditorSuggest(new SlashSuggestions(this));
+		this.addSettingTab(new SlashSnippetSettingTab(this.app, this));
+		this.loadAllTemplatedFiles();
+		this.listenForUpdates();
+		this.bibleVerses = new BibleVerses(this);
+		await this.bibleVerses.load()
+		this.registerEditorSuggest(new BibleSuggestions(this));
+
+		const mySelectionListener = EditorView.updateListener.of((update: ViewUpdate) => {
+			if (!update.docChanged) return;
+
+			for (const tr of update.transactions) {
+				const changes = tr.changes;
+				changes.iterChanges((fromA, toA, fromB, toB, inserted) => {
+					const deletedText = tr.startState.doc.sliceString(fromA, toA);
+					const insertedText = inserted.toString();
+
+					if (deletedText.length > 0 && insertedText === this.settings.slashTrigger) {
+						this.selectedText = deletedText;
+					}
+				});
+			}
+		});
+		this.registerEditorExtension(mySelectionListener);
+
+	}
+
+
+
+	loadAllTemplatedFiles() {
+		const files = this.app.vault.getMarkdownFiles();
+		const snippets = []
+		for (let i = 0; i < files.length; i++) {
+			const file = files[i];
+
+			if (file?.path.startsWith(`${this.settings.snippetPath}/`)) {
+				snippets.push(file);
+
+				const oldScore = localStorage.getItem(file.path);
+				if (!oldScore) {
+					const timestamp = Date.now();
+					localStorage.setItem(file.path, String(timestamp));
+				}
+			}
+		}
+		this.snippetFiles = snippets;
+	}
+
+	listenForUpdates() {
+		this.registerEvent(this.app.vault.on('create', (file) => {
+			if (file.path.startsWith(`${this.settings.snippetPath}/`)) {
+				this.snippetFiles.push(file as TFile);
+
+				const oldScore = localStorage.getItem(file.path);
+				if (!oldScore) {
+					const timestamp = Date.now();
+					localStorage.setItem(file.path, String(timestamp));
+				}
+			}
+		}));
+
+		this.registerEvent(this.app.vault.on('delete', (file) => {
+			if (file.path.startsWith(`${this.settings.snippetPath}/`)) {
+				this.snippetFiles.remove(file as TFile);
+				localStorage.removeItem(file.path)
+			}
+		}));
+	}
+
+	public async runTemplaterReplace() {
+		const templaterReplaceCommandId = "templater-obsdidian:replace-in-file-templater";
+		const saveCommandId = "editor:save-file";
+
+		(this.app as any).commands.executeCommandById(saveCommandId);
+
+		const delayTemplateReplaceRun = debounce(() => {
+			(this.app as any).commands.executeCommandById(templaterReplaceCommandId);
+		}, 300, true)
+
+		delayTemplateReplaceRun()
+	}
+
+	onunload() {
+	}
+
+	async loadSettings() {
+		this.settings = Object.assign(
+			{},
+			DEFAULT_SETTINGS,
+			await this.loadData()
+		);
+	}
+
+	async saveSettings() {
+		await this.saveData(this.settings);
+	}
+
+
+}
+
