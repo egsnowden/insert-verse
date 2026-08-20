@@ -42,7 +42,8 @@ openwiki/
 
 ## Page Relationships
 
-```mermaid
+<!-- openwiki: mermaid parse failed and this diagram was converted to a text fence so it does not break rendering. Fix the diagram source and restore the mermaid fence. Parser error: Heuristic: an unescaped angle bracket inside a label breaks rendering; rephrase the label. -->
+```text
 graph TD
     Index["📄 index.md<br/>(Main Hub)"]
     
@@ -229,7 +230,9 @@ Internal links use absolute paths with `/openwiki/` prefix:
 
 ```markdown
 # Cross-reference another page
+<!-- openwiki: broken internal link [/openwiki/page-name.md] file "/openwiki/page-name.md" does not exist. Fix the href or restore the target, then delete this comment. -->
 [Link text](/openwiki/page-name.md)
+<!-- openwiki: broken internal link [/openwiki/section/page-name.md] file "/openwiki/section/page-name.md" does not exist. Fix the href or restore the target, then delete this comment. -->
 [Link text](/openwiki/section/page-name.md)
 ```
 

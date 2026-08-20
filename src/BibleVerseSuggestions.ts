@@ -1,5 +1,5 @@
 import { Editor, EditorSuggest, EditorPosition, TFile, EditorSuggestContext, EditorSuggestTriggerInfo } from "obsidian";
-import SlashSnippetPlugin, { SuggestionObject, SuggestionVerse } from "./main";
+import SlashSnippetPlugin, { SuggestionVerse } from "./main";
 
 export default class BibleSuggestions extends EditorSuggest<SuggestionVerse> {
     private plugin: SlashSnippetPlugin;

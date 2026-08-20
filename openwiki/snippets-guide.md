@@ -238,6 +238,7 @@ Result:
 Create `Snippets/link-with-text.md`:
 
 ```markdown
+<!-- openwiki: broken internal link [%%cursor%%] file "%%cursor%%" does not exist. Fix the href or restore the target, then delete this comment. -->
 [%%textSelection%%](%%cursor%%)
 ```
 
@@ -479,6 +480,7 @@ The plugin's "last used" feature automatically ranks frequently inserted snippet
    ```markdown
    **%%cursor%%**
    
+<!-- openwiki: broken internal link [%%cursor%%] file "%%cursor%%" does not exist. Fix the href or restore the target, then delete this comment. -->
    [Link](%%cursor%%)
    
    Notes: %%textSelection%%

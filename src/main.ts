@@ -7,6 +7,7 @@ import BibleSuggestions from "./BibleVerseSuggestions";
 
 interface SlashSnippetSettings {
 	slashTrigger: string;
+	bibleTrigger: string;
 	fuzzySearch: boolean;
 	highlight: boolean;
 	showPath: boolean;
@@ -22,8 +23,8 @@ interface SlashSnippetSettings {
 
 
 const DEFAULT_SETTINGS: SlashSnippetSettings = {
-	bibleTrigger: "/",
 	slashTrigger: "/",
+	bibleTrigger: "!",
 	fuzzySearch: true,
 	highlight: true,
 	showPath: false,
@@ -155,4 +156,3 @@ export default class SlashSnippetPlugin extends Plugin {
 
 
 }
-

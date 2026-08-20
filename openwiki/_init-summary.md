@@ -229,7 +229,9 @@ All concept files (.md) include:
 
 Use absolute paths with `/openwiki/` prefix:
 ```markdown
+<!-- openwiki: broken internal link [/openwiki/page.md] file "/openwiki/page.md" does not exist. Fix the href or restore the target, then delete this comment. -->
 [Link Text](/openwiki/page.md)
+<!-- openwiki: broken internal link [/openwiki/section/page.md] file "/openwiki/section/page.md" does not exist. Fix the href or restore the target, then delete this comment. -->
 [Link Text](/openwiki/section/page.md)
 ```
 
