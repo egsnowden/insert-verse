@@ -1,15 +1,15 @@
 import { EditorSuggestContext, EditorSuggestTriggerInfo } from "obsidian";
-import SlashSnippetPlugin from "./main";
+import BibleVersePlugin from "./main";
 
 export default class BibleVerses {
-    private plugin: SlashSnippetPlugin;
+    private plugin: BibleVersePlugin;
     public verses: Record<string, string> = {};
-    constructor(plugin: SlashSnippetPlugin) {
+    constructor(plugin: BibleVersePlugin) {
         this.plugin = plugin;
     }
 
     async load() {
-        const path = `${this.plugin.manifest.dir}/nwt_verses.json`;
+        const path = `${this.plugin.manifest.dir}/src/nwt_verses.json`;
         const raw = await this.plugin.app.vault.adapter.read(path);
         const parsed = JSON.parse(raw);
         this.verses = parsed;

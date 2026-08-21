@@ -1,8 +1,0 @@
-{
-  "updatedAt": "2026-08-19T13:22:43.356Z",
-  "command": "update",
-  "gitHead": "58eb353a5b9a3f9682891be0dafcbbf80437463f",
-  "model": "bedrock/global.anthropic.claude-haiku-4-5-20251001-v1:0",
-  "status": "complete",
-  "language": "en"
-}

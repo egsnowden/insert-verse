@@ -1,10 +1,10 @@
 import { Editor, EditorSuggest, EditorPosition, TFile, EditorSuggestContext, EditorSuggestTriggerInfo } from "obsidian";
-import SlashSnippetPlugin, { SuggestionVerse } from "./main";
+import BibleVersePlugin, { SuggestionVerse } from "./main";
 
 export default class BibleSuggestions extends EditorSuggest<SuggestionVerse> {
-    private plugin: SlashSnippetPlugin;
+    private plugin: BibleVersePlugin;
 
-    constructor(app: SlashSnippetPlugin) {
+    constructor(app: BibleVersePlugin) {
         super(app.app);
         this.plugin = app;
     }
@@ -15,7 +15,7 @@ export default class BibleSuggestions extends EditorSuggest<SuggestionVerse> {
         file: TFile | null
     ): EditorSuggestTriggerInfo | null {
         const currentLine = editor.getLine(cursor.line).slice(0, cursor.ch);
-        const trigger = "!"
+        const trigger = this.plugin.settings.bibleTrigger;
 
         if (!currentLine.contains(trigger)) {
             return null
