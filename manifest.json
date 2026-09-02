@@ -3,5 +3,6 @@
     "name": "Insert Verse",
     "version": "1.0.0",
     "description": "Insert Bible verses by typing a trigger + reference",
-    "author": "egsnowden"
+    "author": "egsnowden",
+    "minAppVersion": "0.15.0"
 }
