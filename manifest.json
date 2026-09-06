@@ -1,7 +1,7 @@
 {
     "id": "insert-verse",
     "name": "Insert Verse",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "description": "Insert Bible verses by typing a trigger + reference",
     "author": "egsnowden",
     "minAppVersion": "0.15.0"
